@@ -40,42 +40,55 @@ loadSprite('tubo-bottom-right', 'nqQ79eI.png')
 loadSprite('blue-bloco', 'fVscIbn.png')
 loadSprite('blue-tijolo', '3e5YRQd.png')
 loadSprite('blue-aco', 'gqVoI2b.png')
-loadSprite('blue-goomba', 'SvV4ueD.png')
+loadSprite('blue-enemy', 'SvV4ueD.png')
+
 
 
 scene("game", ({level, score, big}) => {
     layer(["bg", "obj", "ui"], "obj")
 
+    
+    let html = document.querySelector("html"); // pq isso??
+    let musica = document.querySelector("#msc1");
+    html.addEventListener('click', () => {
+        msc1.play();
+    }) 
+
+    let html2 = document.querySelector("html"); // pq isso??
+    let musica2 = document.querySelector("#msc2");
+    
+
     const maps = [
         [
-        // '=                                                                                                                                                            =',
-        // '=                                                                                                                                                            =',
-        // '=                                                                                                                                                            =',
-        // '=                                                                                                                                                            =',
-        // '=                                                                                                                                                            =',
-        // '=                                                               *                                                                                            =',
-        // '=                                                                                                                                                            =',
-        // '=                   ;                                                                                                      ;                                 =',
-        // '=                                                             =====      @ ; @ ; @                                        ===     ;                          =',
-        // '=                                                    ; ; ;               =========                                  ;;;          ===   @ ;                   =',
-        // '=      ;   ;   =*=+=      ;    ;                    =======                                                       *====               ==*=                   =',
-        // '=                                                                                                                                                            =',
-        // '=                           @     @                                                                @                                                         =',
-        // '==============================================================================================================================================================',
-        '=                                      =',
-        '=                                      =',
-        '=                                      =',
-        '=                                      =',
-        '=                                      =',
-        '=                                      =',
-        '=                                      =',
-        '=                   ;                  =',
-        '=                                      =',
-        '=                                 ;    =',
-        '=      ;   ;   =*=+=      ;            =',
-        '=                                 -}   =',
-        '=                       @   @     ()   =',
-        '========================================',
+        '=                                                                                                                                                            =',
+        '=                                                                                                                                                            =',
+        '=                                                                                                                                                            =',
+        '=                                                                                                                                                            =',
+        '=                                                                                                                                                            =',
+        '=                                                               *                                                                                            =',
+        '=                                                                                                                                                            =',
+        '=                   ;                                                                                                      ;                                 =',
+        '=                                                             =====      @ ; @ ; @                                        ===     ;                          =',
+        '=                                                    ; ; ;               =========                                  ; ;          ===   @ ;                   =',
+        '=      ;   ;   =*=+=      ;    ;                    =======                                                       *====               ==*=                   =',
+        '=                                                                                                                                                            =',
+        '=                                                                                                                                                      -}    =',
+        '=                           @     @                                                                    @  @                                            ()    =',
+        '==============================================================================================================================================================',
+        // '=                                      =',
+        // '=                                      =',
+        // '=                                      =',
+        // '=                                      =',
+        // '=                                      =',
+        // '=                                      =',
+        // '=                                      =',
+        // '=                   ;                  =',
+        // '=                                      =',
+        // '=                                 ;    =',
+        // '=      ;   ;   =*=+=      ;            =',
+        // '=                                 -}   =',
+        // '=                       @   @     ()   =',
+        // '========================================',
         ],   
 
         [
@@ -83,14 +96,14 @@ scene("game", ({level, score, big}) => {
         '!                                    !',
         '!                                    !',
         '!                                    !',
-        '!                                    !',
-        '!                                    !',
-        '!                                    !',
-        '!                                    !',
-        '!                       ;            !',
-        '!                     ; x ;          !',
-        '!                   ; x x x ;    -}  !',
-        '!           z   z   x x x x x    ()  !',
+        '!                 ;;;;               !',
+        '!               ;;;;;;;              !',
+        '!             ;;;;;;;;;;;            !',
+        '!           ;;;;;;;;;;;;;;;          !',
+        '!           ;;;;;;;;;;;;;;;          !',
+        '!           !!!!!!!!!!!!!!!          !',
+        '!           !!!!!!!!!!!!!!!     -}   !',
+        '!           !!!!!!!!!!!!!!!     ()   !',
         '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
         ],
 
@@ -107,8 +120,8 @@ scene("game", ({level, score, big}) => {
         '=                                     =',
         '=       ; ; ;;; ; ;   ;     ; ; ; ;   =',
         '=        ;  ; ; ; ;    ; ; ;  ; ;;;   =',
-        '=        ;  ;;; ;;;     ; ;   ; ; ;   =',
-        '=========================================',
+        '=        ;  ;;; ;;;  @@@@@@@@@@@@@@   =',
+        '=======================================',
         ]
     ]      
 
@@ -130,13 +143,14 @@ scene("game", ({level, score, big}) => {
         '}': [sprite('tubo-top-right'), solid(), 'tubo', scale(0.5)],
         '!': [sprite('blue-bloco'), solid(), scale(0.5)],
         '/': [sprite('blue-tijolo'), solid(), scale(0.5)],
-        'z': [sprite('blue-goomba'), body(), 'dangerous', solid(), scale(0.5)],
+        'z': [sprite('blue-enemy'), body(), 'dangerous', solid(), scale(0.5)],
         'y': [sprite('blue-surpresa'), solid(), 'moeda-surpresa', scale(0.5)],
         'x': [sprite('blue-aco'), solid(), scale(0.5)],
     }
 
     const gameLevel = addLevel(maps[level], levelCfg)
 
+    
     const scoreLabel = add([
         text('Moedas: ' +score, 10),
         pos(24,20),
@@ -147,6 +161,11 @@ scene("game", ({level, score, big}) => {
     ])
 
     add([text('Level: ' + parseInt(level + 1), 10), pos(24,4)])
+    // 
+    // if (level[0]){
+    //     add([text('Devido a alguma particularidade do Google, é necessário clicar em qualquer canto da tela para que se inicialize a música do game.', 10), pos(24,15)])
+    // }
+    // const aviso = alert('')
 
     function big(){
         return{
@@ -173,7 +192,8 @@ scene("game", ({level, score, big}) => {
         body(),
         big(),
         pos(50,0),
-        origin('bot')
+        origin('bot'),
+        
     ])
 
     if(isBig){
@@ -244,13 +264,15 @@ scene("game", ({level, score, big}) => {
             isJumping = false
         }
        
+            camPos(player.pos)
         
  
     })
 
-    player.on('headbutt', (obj) => {
-        if(obj.is('moeda-surpresa')){
-            gameLevel.spawn(';', obj.gridPos.sub(0,1))
+    
+    player.on('headbutt', (obj) => { // colidir com a cabeça
+        if(obj.is('moeda-surpresa')){ // se o obj for esse...
+            gameLevel.spawn(';', obj.gridPos.sub(0,1))  // spawna isso, destroi e spawna o bloco pós-surpresa
             destroy(obj)
             gameLevel.spawn('#', obj.gridPos.sub(0,0))
             
@@ -294,6 +316,21 @@ scene("game", ({level, score, big}) => {
         }
     })
 
+    player.collides('blue-enemy', (obj) => {
+        if(isJumping){
+            destroy(obj)
+        }else{
+            if(isBig){
+                player.smallify()
+                player.action(() => {
+                    isJumping = true
+                })
+            }else{
+                go("lose", ({score: scoreLabel.value}))
+            }
+        }
+    })
+
     player.collides('tubo', () => {
         keyPress('down', () => {
             go('game', {
@@ -304,11 +341,24 @@ scene("game", ({level, score, big}) => {
         })
     })
 
+
+
+
 })
+
+    
 
 scene("lose", ({score}) => {
     add([text('Voce perdeu', 18), origin('center'), pos(width()/2, height()/3)])
     add([text('Score: ' +score, 18), origin('center'), pos(width()/2, height()/2)])
+    add([text('Carregando uma nova tentativa....'), origin('center'), pos(width()/2, height()/1.5)])
+    
+    setTimeout(function() {
+        window.location.reload(1);
+      }, 4000);
+
+    msc1.pause()
+    msc2.play()
 })
 
 go("game", ({level: 0, score: 0, big: isBig}))
