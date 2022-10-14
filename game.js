@@ -7,6 +7,7 @@ kaboom({
 
 let isJumping = true // pq true e pq false?
 let isBig = false
+let isFalling = false
 
 loadRoot("https://i.imgur.com/")
 
@@ -320,6 +321,8 @@ scene("game", ({level, score, big}) => {
 
     player.collides('dangerous', (obj) => {
         if(isJumping){
+            destroy(obj)
+        }else if(isFalling){
             destroy(obj)
         }else{
             if(isBig){
